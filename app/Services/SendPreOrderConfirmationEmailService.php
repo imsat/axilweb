@@ -23,7 +23,8 @@ class SendPreOrderConfirmationEmailService
         Mail::to($user->email)->later(now()->addSeconds(10), new UserConfirmationEmail($data));
 
         // Send admin email second but admin got the email first
-        Mail::to('admin@mail.com')->send(new AdminConfirmationEmail($data));
+//        Mail::to('admin@mail.com')->send(new AdminConfirmationEmail($data));
+        Mail::to('satyajit.cse@yahoo.com')->send(new AdminConfirmationEmail($data));
 
         return true;
     }
