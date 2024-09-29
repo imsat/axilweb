@@ -10,7 +10,7 @@ class PreOrder extends Model
 {
     use HasFactory, SoftDeletesWithUser;
 
-    protected $fillable = ['user_id', 'total', 'status', 'delivery_date', 'deleted_by_id', 'deleted_at'];
+    protected $fillable = ['user_id', 'total', 'status', 'delivery_address', 'delivery_date', 'deleted_by_id', 'deleted_at'];
 
     public function scopeSearch($query)
     {

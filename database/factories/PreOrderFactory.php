@@ -19,6 +19,7 @@ class PreOrderFactory extends Factory
         return [
             'user_id' => mt_rand(1, 100),
             'total' => mt_rand(1, 20),
+            'delivery_address' => $this->faker->address(),
         ];
     }
 }

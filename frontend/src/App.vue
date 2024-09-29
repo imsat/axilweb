@@ -1,30 +1,43 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
+import Sidebar from "./components/layouts/Sidebar.vue";
+import {useAuthStore} from "./stores/auth.js";
+const store = useAuthStore()
 </script>
-
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Vite + Vue" />
+    <v-app>
+        <v-app-bar :elevation="2" app color="primary" dark>
+<!--            <template v-slot:prepend>-->
+<!--                <v-app-bar-nav-icon></v-app-bar-nav-icon>-->
+<!--            </template>-->
+
+            <v-app-bar-title>AxilWeb</v-app-bar-title>
+        </v-app-bar>
+
+        <Sidebar v-if="store.token" />
+
+        <v-main>
+            <v-container fluid>
+                <router-view/>
+            </v-container>
+<!--                <v-row dense>-->
+<!--                    <v-col-->
+<!--                        v-for="n in 4"-->
+<!--                        :key="n"-->
+<!--                        cols="12"-->
+<!--                    >-->
+<!--                        <v-card-->
+<!--                            :subtitle="`Subtitle for Content ${n}`"-->
+<!--                            :title="`Content ${n}`"-->
+<!--                            text="Lorem ipsum dolor sit amet consectetur, adipisicing elit.?"-->
+<!--                        ></v-card>-->
+<!--                    </v-col>-->
+<!--                </v-row>-->
+        </v-main>
+    </v-app>
 </template>
 
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+.fill-height {
+    height: 100vh;
 }
 </style>

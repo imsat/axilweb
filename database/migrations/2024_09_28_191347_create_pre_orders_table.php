@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->index()->nullable()->constrained('users')->nullOnDelete();
             $table->decimal('total', 10, 2)->nullable();
             $table->enum('status', ['pending', 'confirmed', 'fulfilled', 'canceled'])->default('pending');
+            $table->text('delivery_address')->nullable();
             $table->date('delivery_date')->nullable();
             $table->foreignId('deleted_by_id')->nullable()->constrained('users')->nullOnDelete();
             $table->softDeletes();

@@ -18,16 +18,19 @@ class PreOrderService implements PreOrderInterface
 
     public function list($request)
     {
+        $shortBy = $request->get('short_by');
         $perPage = $request->get('per_page', 10);
         $fields = explode(',', $request->get('fields', 'id'));
 
-        $query = PreOrder::search()->select($fields)->latest('id', 'desc');
+        $query = PreOrder::search()->select($fields)
+            ->when(blank($shortBy), fn($q) => $q->latest('id'))
+            ->when(!blank($shortBy), fn($q) => $q->orderBy($shortBy[0]['key'], $shortBy[0]['order']));
 
         if ($request->filled('with')) {
             $with = json_decode($request->get('with'));
             $query->with($with);
         }
-        return $query->cursorPaginate($perPage);
+        return $query->paginate($perPage);
     }
 
     public function create($request)

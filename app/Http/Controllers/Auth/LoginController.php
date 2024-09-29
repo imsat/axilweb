@@ -45,7 +45,7 @@ class LoginController extends Controller implements HasMiddleware
                 throw new \Exception('Unauthorized: You do not have the required role.', 401);
             }
 
-            $data['user'] = auth()->user()->only(['id', 'name', 'email', 'email_verified_at']);
+            $data['user'] = auth()->user()->only(['id', 'name', 'email', 'role', 'email_verified_at']);
 
             return $this->response(true, 'Login successfully.', 200, $data);
         } catch (\Exception $e) {
