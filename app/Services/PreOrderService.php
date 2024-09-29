@@ -46,6 +46,7 @@ class PreOrderService implements PreOrderInterface
             $preOrder = new PreOrder();
             $preOrderData['user_id'] = $user->id;
             $preOrderData['total'] = $request->get('total');
+            $preOrderData['delivery_address'] = $request->get('address');
             $preOrder->fill($preOrderData);
             $preOrder->save();
 

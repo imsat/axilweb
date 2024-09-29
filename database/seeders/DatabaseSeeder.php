@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
              'email' => 'manager@mail.com',
              'role' => 'manager',
          ]);
-         User::factory(100)->create();
+         User::factory(500)->create();
 
         // Insert category
         DB::table('categories')->insert([
@@ -62,7 +62,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // Generate fake orders
-        PreOrder::factory(100)->create()->each(function (PreOrder $preOrder) {
+        PreOrder::factory(2000)->create()->each(function (PreOrder $preOrder) {
             PreOrderItem::factory(mt_rand(3, 8))->create(['pre_order_id'=> $preOrder->id]);
         });
     }
