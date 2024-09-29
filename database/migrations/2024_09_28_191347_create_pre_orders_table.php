@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('pre_orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('user_id')->index()->nullable()->constrained('users')->nullOnDelete();
             $table->decimal('total', 10, 2)->nullable();
             $table->enum('status', ['pending', 'confirmed', 'fulfilled', 'canceled'])->default('pending');
             $table->date('delivery_date')->nullable();

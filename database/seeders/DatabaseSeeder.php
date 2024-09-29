@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Order;
-use App\Models\OrderItem;
 use App\Models\PreOrder;
 use App\Models\PreOrderItem;
 use App\Models\User;
@@ -18,7 +16,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+         User::factory()->create([
+             'name' => 'Admin',
+             'email' => 'admin@mail.com',
+             'role' => 'admin',
+         ]);
+         User::factory()->create([
+             'name' => 'Manager',
+             'email' => 'manager@mail.com',
+             'role' => 'manager',
+         ]);
          User::factory(100)->create();
 
         // Insert category

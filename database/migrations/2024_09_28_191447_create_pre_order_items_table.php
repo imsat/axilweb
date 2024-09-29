@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('pre_order_id')->nullable()->constrained('pre_orders')->nullOnDelete();
             $table->foreignId('product_id')->nullable()->constrained('products')->nullOnDelete();
+            $table->decimal('price', 10, 2);
             $table->integer('quantity');
             $table->timestamps();
         });

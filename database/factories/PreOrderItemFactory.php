@@ -19,7 +19,8 @@ class PreOrderItemFactory extends Factory
         return [
             'pre_order_id' => mt_rand(1, 50),
             'product_id' => mt_rand(1, 20),
-            'quantity' => mt_rand(1, 10)
+            'quantity' => mt_rand(1, 10),
+            'price' => $this->faker->randomFloat(2, 2, 8),
         ];
     }
 }
