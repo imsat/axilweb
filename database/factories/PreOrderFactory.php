@@ -20,6 +20,7 @@ class PreOrderFactory extends Factory
             'user_id' => mt_rand(1, 100),
             'total' => mt_rand(1, 20),
             'delivery_address' => $this->faker->address(),
+            'status' => $this->faker->randomElement(['pending', 'confirmed', 'fulfilled', 'canceled']),
         ];
     }
 }
