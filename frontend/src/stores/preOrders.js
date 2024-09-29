@@ -43,7 +43,6 @@ export const usePreOrderStore = defineStore('preOrder', {
             await getWithParams('/pre-orders', payload)
                 .then(res => {
                     let {data, ...rest} = res?.data?.data
-                    console.log(data)
                     this.preOrders = data
                     this.pagination = rest
                 }).finally(_ => this.isLoading = false)

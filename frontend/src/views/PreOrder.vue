@@ -55,7 +55,7 @@ const computedHeaders = computed(() => {
             v-model:items-per-page="itemsPerPage"
             :headers="computedHeaders"
             :items="preOrders"
-            :items-length="pagination.total"
+            :items-length="pagination.total || 0"
             item-value="name"
             @update:options="store.getPreOrders"
             @update:sortBy="store.updateShortBY"
