@@ -150,8 +150,8 @@ const totalCartValue = computed(() => {
                     </v-card-text>
 
                     <template v-slot:actions>
-                        <!--                        :disabled="!valid"-->
                         <v-btn
+                            :disabled="!valid"
                             prepend-icon="mdi-plus"
                             color="primary"
                             text="Submit"
