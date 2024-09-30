@@ -31,7 +31,7 @@ class LoginController extends Controller implements HasMiddleware
         ]);
 
         if ($validator->fails()) {
-            return $this->response(false, 'Please provide valid data!', 400, $validator->errors());
+            return $this->response(false, 'Please provide valid data!', 400, null,  $validator->errors());
         }
         try {
             $credential = $request->only('email', 'password');

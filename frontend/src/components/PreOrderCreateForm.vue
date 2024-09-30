@@ -136,6 +136,8 @@ const totalCartValue = computed(() => {
                                 required
                             ></v-textarea>
 
+                            <div class="g-recaptcha" data-sitekey="6LcBr1MqAAAAAFQKtIUobH---MBcC76fIjL4aEpF"></div>
+
                         </v-form>
                     </v-card-text>
 

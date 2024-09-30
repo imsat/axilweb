@@ -36,10 +36,13 @@ class PreOrderController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
             'email' => 'required|email',
-            'products' => 'required|array',
+            'delivery_address' => 'required|string',
             'products.*.id' => 'required', // Each product must have a id
             'products.*.price' => 'required|numeric|min:0', // Each product must have a valid price
             'products.*.quantity' => 'required|integer|min:1', // Each product must have a valid quantity
+            'products' => 'required|array',
+        ], [
+            'products.required' => 'Please add at least one product into your cart!',
         ]);
 
         // Validate phone if the email ends with "@xyz.com"
@@ -56,7 +59,7 @@ class PreOrderController extends Controller
                 return $this->preOrderService->create($request);
             }, $request);
 
-            return $this->response(true, 'Created successfully', 200, $preOrders);
+            return $this->response(true, 'Submitted successfully', 200, $preOrders);
         } catch (\Exception $e) {
             return $this->response(false, $e->getMessage() ?? 'Something went wrong!', 404);
         }
