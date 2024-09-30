@@ -34,9 +34,9 @@ export const useAuthStore = defineStore('auth', {
                     successToast(res?.data?.message)
                     this.router.push('/')
                 }).catch(err => {
-                    const {data, message} = err?.response?.data
+                    const {errors, message} = err?.response?.data
                     errorToast(message)
-                    this.errors = data
+                    this.errors = errors
                 }).finally(_ => this.isLoading = false)
 
         },

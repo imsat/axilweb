@@ -10,7 +10,19 @@ const store = useAuthStore()
 <!--                <v-app-bar-nav-icon></v-app-bar-nav-icon>-->
 <!--            </template>-->
 
-            <v-app-bar-title>AxilWeb</v-app-bar-title>
+            <v-app-bar-title>
+                <router-link to="/" class="text-decoration-none text-white">AxilWeb</router-link>
+            </v-app-bar-title>
+
+            <v-spacer></v-spacer>
+
+            <v-btn
+                to="/login"
+                link
+                prepend-icon="mdi-security"
+                text="Admin Login"
+                slim
+            ></v-btn>
         </v-app-bar>
 
         <Sidebar v-if="store.token" />
@@ -19,25 +31,9 @@ const store = useAuthStore()
             <v-container fluid>
                 <router-view/>
             </v-container>
-<!--                <v-row dense>-->
-<!--                    <v-col-->
-<!--                        v-for="n in 4"-->
-<!--                        :key="n"-->
-<!--                        cols="12"-->
-<!--                    >-->
-<!--                        <v-card-->
-<!--                            :subtitle="`Subtitle for Content ${n}`"-->
-<!--                            :title="`Content ${n}`"-->
-<!--                            text="Lorem ipsum dolor sit amet consectetur, adipisicing elit.?"-->
-<!--                        ></v-card>-->
-<!--                    </v-col>-->
-<!--                </v-row>-->
         </v-main>
     </v-app>
 </template>
 
 <style scoped>
-.fill-height {
-    height: 100vh;
-}
 </style>

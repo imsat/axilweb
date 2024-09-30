@@ -3,12 +3,13 @@ import Home from "./views/Home.vue";
 import Login from "./views/Login.vue";
 import Dashboard from "./views/Dashboard.vue";
 import PreOrder from "./views/PreOrder.vue";
+import {get} from "./utils/localStorage.js";
 
 
 const routes = [
-    {path: '/', name: 'home', component: Home, meta: {title: 'Home', guest: true, requiresAuth: false}},
+    {path: '/', name: 'home', component: Home, meta: {title: 'Home', guest: true}},
     {path: '/dashboard', name: 'dashboard', component: Dashboard, meta: {title: 'Dashboard', guest: false, requiresAuth: true}},
-    {path: '/pre-orders', name: 'pre-order', component: PreOrder, meta: {title: 'PreOrder', guest: false, requiresAuth: true}},
+    {path: '/pre-orders', name: 'pre-order', component: PreOrder, meta: {title: 'Pre Order', guest: false, requiresAuth: true}},
     {path: '/login', name: 'login', component: Login, meta: {title: 'Login', guest: true}},
 
 ]
@@ -21,7 +22,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     if (to.matched.some((record) => record.meta.requiresAuth)) {
-        if (localStorage?.getItem('token')) {
+        if (get('token')) {
             next();
             return;
         }
@@ -34,7 +35,7 @@ router.beforeEach((to, from, next) => {
 
 router.beforeEach((to, from, next) => {
     if (to.matched.some((record) => record.meta.guest)) {
-        if (localStorage?.getItem('token')) {
+        if (get('token')) {
             next("/dashboard");
             return;
         }

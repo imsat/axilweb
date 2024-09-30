@@ -13,8 +13,15 @@ export const usePreOrderStore = defineStore('preOrder', {
                 total: 0
             },
             preOrderForm: {
+                name: '',
                 email: '',
-                password: '',
+                phone: '',
+                delivery_address: '',
+                products: [],
+            },
+            cart: {
+                product: null,
+                quantity: 1,
             },
         }
     },
@@ -22,6 +29,7 @@ export const usePreOrderStore = defineStore('preOrder', {
         getError: (state) => {
             return (key) => !!state.errors && state.errors[key] !== undefined ? state.errors[key][0] : null
         },
+        showPhoneField: (state) => state.preOrderForm.email.includes('@xyz.com')
     },
     actions: {
         updateShortBY(val) {
@@ -67,8 +75,9 @@ export const usePreOrderStore = defineStore('preOrder', {
                     } else {
                         this.preOrders.unshift(data)
                     }
-                    this.preOrderForm = {}
+                    // this.preOrderForm = {}
                     successToast(res?.data?.message)
+                    this.$reset();
                     // need to work
                     // this.router.push('/pre-orders')
                 }).catch(err => {
@@ -85,6 +94,41 @@ export const usePreOrderStore = defineStore('preOrder', {
                         successToast(res?.data?.message)
                         this.preOrders = this.preOrders.filter(preOrder => preOrder.id !== id);
                     })
+            }
+        },
+        addToCart() {
+            // Find if the product already exists in cart
+            let exists = this.preOrderForm.products.find((product) => product.id === this.cart.product.id);
+
+            // If it exists, increment the quantity
+            if (exists) {
+                exists.quantity += this.cart.quantity;
+            } else {
+                const newProduct = {
+                    ...this.cart.product,
+                    quantity: this.cart.quantity
+                };
+
+                this.preOrderForm.products.unshift(newProduct);
+            }
+
+            // Reset
+            this.cart = {
+                product: null,
+                quantity: 1
+            };
+            this.clearError('products')
+        },
+        removeCart(id) {
+            this.preOrderForm.products = this.preOrderForm.products.filter(cart => cart.id !== id)
+        },
+        clearError(key){
+            if (key) {
+                const updatedError = { ...this.errors };
+                delete updatedError[key];
+                this.errors =  updatedError;
+            } else {
+                return null;
             }
         }
     }

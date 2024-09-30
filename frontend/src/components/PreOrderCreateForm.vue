@@ -1,5 +1,5 @@
 <script setup>
-import {onBeforeMount, reactive, ref} from "vue";
+import {computed, onBeforeMount, reactive, ref, watch} from "vue";
 import {storeToRefs} from "pinia";
 // import {useAuthStore} from "../stores/auth.js";
 import {useProductStore} from "../stores/product.js";
@@ -8,47 +8,31 @@ import {usePreOrderStore} from "../stores/preOrders.js";
 const store = usePreOrderStore()
 const productStore = useProductStore()
 // const useAuthStore = useAuthStore()
-const {preOrderForm} = storeToRefs(store)
+const {preOrderForm, cart, showPhoneField} = storeToRefs(store)
 const {products} = storeToRefs(productStore)
 
-console.log(products)
-
-
 const valid = ref(false);
-
-const form = reactive({
-    name: '',
-    email: '',
-    phone: '',
-    address: '',
-    selectedProduct: null,
-    quantity: 1,
-});
 
 onBeforeMount(() => productStore.getProducts())
 
 // Validation rules
-const required = (value) => !!value || 'Required.';
-const email = (value) => /.+@.+\..+/.test(value) || 'E-mail must be valid.';
-
-const submitOrder = () => {
-    console.log('Pre-order Submitted:', form);
-    alert('Your pre-order has been submitted!');
-    resetForm();
+const email = (value) => {
+    if (!value) return true; // No error if the field is empty
+    return value.length > 0 && /.+@.+\..+/.test(value) || 'E-mail must be valid.'
 };
 
-// const resetForm = () => {
-//     form.name = '';
-//     form.email = '';
-//     form.phone = '';
-//     form.address = '';
-//     form.selectedProduct = null;
-//     form.quantity = 1;
-// };
+const totalCartValue = computed(() => {
+    let total = 0;
+    // Check if preOrderForm and products are defined
+    if (preOrderForm.value && Array.isArray(preOrderForm.value.products)) {
+        for (let i = 0; i < preOrderForm.value.products.length; i++) {
+            const product = preOrderForm.value.products[i];
+            total += (product.quantity * product.price) || 0;
+        }
+    }
 
-const formatCurrency = (value) => {
-    return `$${parseFloat(value).toFixed(2)}`;
-};
+    return total;
+});
 
 </script>
 
@@ -56,124 +40,159 @@ const formatCurrency = (value) => {
     <v-container>
         <v-row>
             <!-- Pre-order form -->
-            <v-col cols="12" md="6">
+            <v-col cols="12" md="7">
                 <v-card>
-                    <v-card-title>Pre-order Form</v-card-title>
+                    <v-card-title>Create New Pre-order</v-card-title>
                     <v-card-text>
                         <v-form v-model="valid">
-                            <!-- Product Selection -->
                             <v-select
-                                v-model="form.selectedProduct"
+                                v-model="cart.product"
                                 :items="products"
                                 label="Select Product"
                                 item-title="name"
-                                :rules="[required]"
-                                required
+                                return-object
                                 clearable
+                                @update:modelValue="store.clearError('products')"
+                                @click:clear="cart.quantity = 1; store.clearError('products')"
+                                :error-messages="store.getError('products')"
                             >
                             </v-select>
 
                             <v-row justify="space-between">
                                 <v-col cols="auto">
-                                    <v-text-field
-                                        v-model="form.quantity"
-                                        label="Order Quantity"
-                                        type="number"
-                                        :rules="[required]"
-                                        required
-                                    ></v-text-field>
+                                    <v-row>
+
+                                        <v-col cols="auto">
+                                            <v-text-field
+                                                v-model="cart.quantity"
+                                                label="Order Quantity"
+                                                type="number"
+                                                class="hide-arrows"
+                                                readonly
+                                            ></v-text-field>
+                                        </v-col>
+                                        <v-col cols="2">
+                                            <v-btn icon size="sm" color="green" class="mb-4"
+                                                   :disabled="cart.product === null"
+                                                   @click="cart.quantity += 1">
+                                                <v-icon>mdi-plus</v-icon>
+                                            </v-btn>
+                                            <v-btn icon size="sm" color="red" @click="cart.quantity -= 1"
+                                                   :disabled="cart.quantity === 1">
+                                                <v-icon>mdi-minus</v-icon>
+                                            </v-btn>
+                                        </v-col>
+                                    </v-row>
                                 </v-col>
 
                                 <v-col cols="auto">
                                     <v-btn
+                                        :disabled="cart.quantity <= 0 || cart.product === null"
                                         elevation="4"
                                         size="large"
                                         prepend-icon="mdi-cart"
+                                        color="indigo-darken-3"
+                                        @click="store.addToCart(cart.product)"
                                     >
                                         Add to Cart
                                     </v-btn>
                                 </v-col>
                             </v-row>
 
-                            <!--                            <v-row>-->
-                            <!--                                <v-col cols="12">-->
-                            <!--                                    <div class="d-flex align-center ">-->
-                            <!--                                        &lt;!&ndash; Order Quantity &ndash;&gt;-->
-                            <!--                                        <v-text-field-->
-                            <!--                                            v-model="form.quantity"-->
-                            <!--                                            label="Order Quantity"-->
-                            <!--                                            type="number"-->
-                            <!--                                            :rules="[required]"-->
-                            <!--                                            required-->
-                            <!--                                            class="mr-4"-->
-                            <!--                                        ></v-text-field>-->
 
-                            <!--                                        &lt;!&ndash; Add to Cart Button &ndash;&gt;-->
-                            <!--                                        <v-btn-->
-                            <!--                                            variant="outlined"-->
-                            <!--                                            color="primary"-->
-                            <!--                                            prepend-icon="mdi-cart"-->
-                            <!--                                            size="x-large"-->
-                            <!--                                        >-->
-                            <!--                                        Add to Cart-->
-                            <!--                                        </v-btn>-->
-                            <!--                                    </div>-->
-                            <!--                                </v-col>-->
-                            <!--                            </v-row>-->
-
-                            <!-- Customer Name -->
                             <v-text-field
-                                v-model="form.name"
+                                v-model="preOrderForm.name"
                                 label="Full Name"
-                                :rules="[required]"
+                                :error-messages="store.getError('name')"
+                                @input="store.clearError('name')"
                                 required
                             ></v-text-field>
 
-                            <!-- Customer Email -->
                             <v-text-field
-                                v-model="form.email"
+                                v-model="preOrderForm.email"
                                 label="Email"
-                                :rules="[required, email]"
+                                :rules="[email]"
+                                :error-messages="store.getError('email')"
+                                @input="store.clearError('email')"
                                 required
                             ></v-text-field>
 
-                            <!-- Customer Phone -->
                             <v-text-field
-                                v-model="form.phone"
+                                v-if="showPhoneField"
+                                v-model="preOrderForm.phone"
+                                type="number"
                                 label="Phone Number"
-                                :rules="[required]"
+                                :error-messages="store.getError('phone')"
+                                @input="store.clearError('phone')"
                                 required
+                                class="hide-arrows"
                             ></v-text-field>
 
-                            <!-- Delivery Address -->
                             <v-textarea
-                                v-model="form.address"
+                                v-model="preOrderForm.delivery_address"
                                 label="Delivery Address"
-                                :rules="[required]"
+                                :error-messages="store.getError('delivery_address')"
+                                @input="store.clearError('delivery_address')"
                                 required
                             ></v-textarea>
 
                         </v-form>
                     </v-card-text>
 
-                    <v-card-actions>
-                        <v-btn :disabled="!valid" @click="submitOrder" color="primary">Submit Pre-order</v-btn>
-                    </v-card-actions>
+                    <template v-slot:actions>
+<!--                        :disabled="!valid"-->
+                        <v-btn
+                            prepend-icon="mdi-plus"
+                            color="primary"
+                            text="Submit"
+                            variant="elevated"
+                            class="ml-auto"
+                            size="x-large"
+                            @click="store.handleSave()"
+                        ></v-btn>
+                    </template>
                 </v-card>
             </v-col>
 
-            <!-- Product List -->
-            <v-col cols="12" md="6">
+            <v-col cols="12" md="5">
                 <v-card>
-                    <v-card-title>Cart</v-card-title>
+                    <v-toolbar color="deep-purple accent-4" justify="between">
+                        <v-toolbar-title>Cart</v-toolbar-title>
+                        <p class="font-weight-bold mr-5" v-if="totalCartValue > 0">${{ totalCartValue }}</p>
+                    </v-toolbar>
                     <v-card-text>
                         <v-list>
-                            <v-list-item v-for="product in products" :key="product.name">
-                                <!--                                <v-list-item-content>-->
-                                <!--                                    <v-list-item-title>{{ product.name }}</v-list-item-title>-->
-                                <!--                                    <v-list-item-subtitle>{{ formatCurrency(product.price) }}</v-list-item-subtitle>-->
-                                <!--                                </v-list-item-content>-->
-                            </v-list-item>
+                            <v-list lines="one">
+
+                                <v-list-item
+                                    v-for="product in preOrderForm.products"
+                                    :key="product.name"
+                                    :title="product.name"
+                                >
+                                    <template v-slot:prepend>
+                                        <v-avatar color="grey-lighten-1" style="border-radius: 5px">
+                                            <v-img :src="product.image"></v-img>
+                                        </v-avatar>
+
+
+                                    </template>
+
+                                    <template v-slot:append>
+                                        <v-icon>mdi-chevron-left</v-icon>
+                                        <p class="font-weight-bold">{{ product.quantity }}</p>
+                                        <v-icon>mdi-chevron-right</v-icon>
+
+                                        <p class="font-weight-bold mx-3">${{ product.price }}</p>
+
+                                        <v-btn
+                                            color="grey-lighten-1"
+                                            icon="mdi-close"
+                                            variant="text"
+                                            @click="store.removeCart(product.id)"
+                                        ></v-btn>
+                                    </template>
+                                </v-list-item>
+                            </v-list>
                         </v-list>
                     </v-card-text>
                 </v-card>
@@ -182,6 +201,6 @@ const formatCurrency = (value) => {
     </v-container>
 </template>
 
-<style scoped>
+<style>
 
 </style>

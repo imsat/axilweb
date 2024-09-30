@@ -21,7 +21,6 @@ export const useProductStore = defineStore('product', {
             const fields = 'id,name,price,image'
             const payload = {
                 page,
-                per_page: 100,
                 search,
                 fields
             }
