@@ -22,7 +22,7 @@ class PreOrderItem extends Model
     }
 
     public function pre_order(){
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(PreOrder::class);
     }
 
     public function product()

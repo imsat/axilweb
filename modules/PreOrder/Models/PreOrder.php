@@ -24,7 +24,7 @@ class PreOrder extends Model
 
     public function scopeSearch($query)
     {
-        return empty(request()->search) ? $query : $query->whereHas('user', function ($query) {
+        return empty(request()->search) ? $query : $query->whereHas('customer', function ($query) {
             $query->where('name', 'like', '%' . request()->search . '%')->orWhere('email', 'like', '%' . request()->search . '%');
         });
     }
