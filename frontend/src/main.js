@@ -4,8 +4,6 @@ import '@mdi/font/css/materialdesignicons.css'
 import App from './App.vue'
 import router from "./router.js";
 import { piniaPluginRouter } from './plugins/piniaPluginRouter';
-import { install } from "vue3-recaptcha-v2";
-
 
 
 const app = createApp(App)
@@ -24,10 +22,6 @@ const vuetify = createVuetify({
 const pinia = createPinia()
 pinia.use(piniaPluginRouter)
 
-app.use(install, {
-    sitekey: import.meta.env.VITE_API_RECAPTCHA_SITE_KEY,
-    cnDomains: false,
-})
 app.use(pinia)
 app.use(router)
 app.use(vuetify)

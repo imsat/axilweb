@@ -18,12 +18,12 @@ export const usePreOrderStore = defineStore('preOrder', {
                 phone: '',
                 delivery_address: '',
                 products: [],
-                g_recaptcha_response: ''
             },
             cart: {
                 product: null,
                 quantity: 1,
             },
+            g_recaptcha_response: '',
         }
     },
     getters: {
@@ -68,7 +68,7 @@ export const usePreOrderStore = defineStore('preOrder', {
                 }
             }
 
-            await post(apiUrl, this.preOrderForm)
+            await post(apiUrl, {...this.preOrderForm, 'g_recaptcha_response' : this.g_recaptcha_response})
                 .then(res => {
                     const data = res?.data?.data;
                     if (action === 'edit') {
@@ -78,6 +78,7 @@ export const usePreOrderStore = defineStore('preOrder', {
                     }
                     // this.preOrderForm = {}
                     successToast(res?.data?.message)
+                    grecaptcha.reset();
                     this.$reset();
                     // need to work
                     // this.router.push('/pre-orders')
@@ -131,6 +132,9 @@ export const usePreOrderStore = defineStore('preOrder', {
             } else {
                 return null;
             }
+        },
+        handleSuccess(response) {
+            this.g_recaptcha_response = response;
         }
     }
 })
