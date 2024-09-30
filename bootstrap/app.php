@@ -24,24 +24,24 @@ return Application::configure(basePath: dirname(__DIR__))
         });
 
         // Custom exception handle
-//        $exceptions->render(function (Throwable $exception) {
-//            $statusCode = match (true) {
-//                $exception instanceof NotFoundHttpException => 404,
-//                $exception instanceof ThrottleRequestsException => 429,
-//                default => 500,
-//            };
-//
-//            $message = match (true) {
-//                $exception instanceof NotFoundHttpException => $exception->getMessage(),
-//                $exception instanceof ThrottleRequestsException => $exception->getMessage(),
-//                default => 'Internal Server Error',
-//            };
-//
-//            return response()->json([
-//                'success' => false,
-//                'message' => $message,
-//                'code' => $statusCode,
-//            ], $statusCode);
-//        });
+        $exceptions->render(function (Throwable $exception) {
+            $statusCode = match (true) {
+                $exception instanceof NotFoundHttpException => 404,
+                $exception instanceof ThrottleRequestsException => 429,
+                default => 500,
+            };
+
+            $message = match (true) {
+                $exception instanceof NotFoundHttpException => $exception->getMessage(),
+                $exception instanceof ThrottleRequestsException => $exception->getMessage(),
+                default => 'Internal Server Error',
+            };
+
+            return response()->json([
+                'success' => false,
+                'message' => $message,
+                'code' => $statusCode,
+            ], $statusCode);
+        });
 
     })->create();

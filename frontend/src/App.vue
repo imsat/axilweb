@@ -17,6 +17,7 @@ const store = useAuthStore()
             <v-spacer></v-spacer>
 
             <v-btn
+                v-if="!store.token"
                 to="/login"
                 link
                 prepend-icon="mdi-security"
