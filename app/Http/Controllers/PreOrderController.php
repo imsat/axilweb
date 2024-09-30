@@ -38,14 +38,14 @@ class PreOrderController extends Controller
             'name' => 'required|string',
             'email' => 'required|email',
             'delivery_address' => 'required|string',
-//            'g_recaptcha_response' => 'required',
+            'g_recaptcha_response' => 'required',
             'products.*.id' => 'required', // Each product must have a id
             'products.*.price' => 'required|numeric|min:0', // Each product must have a valid price
             'products.*.quantity' => 'required|integer|min:1', // Each product must have a valid quantity
             'products' => 'required|array',
         ], [
             'products.required' => 'Please add at least one product into your cart!',
-//            'g_recaptcha_response.required' => 'The recaptcha field is required!',
+            'g_recaptcha_response.required' => 'The recaptcha field is required!',
         ]);
 
         // Validate phone if the email ends with "@xyz.com"
@@ -58,17 +58,17 @@ class PreOrderController extends Controller
         }
 
         //Grecaptcha
-//        $recaptchaResponse = $request->get('g_recaptcha_response');
-//        if(!blank($recaptchaResponse)){
-//            $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
-//                'secret' => config('app.recaptcha_secret'),
-//                'response' => $recaptchaResponse,
-//            ])->json();
-//
-//            if(data_get($response, 'success') !== true){
-//                return $this->response(false, 'Something went wrong', 404);
-//            }
-//        }
+        $recaptchaResponse = $request->get('g_recaptcha_response');
+        if(!blank($recaptchaResponse)){
+            $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+                'secret' => config('app.recaptcha_secret'),
+                'response' => $recaptchaResponse,
+            ])->json();
+
+            if(data_get($response, 'success') !== true){
+                return $this->response(false, 'Something went wrong', 404);
+            }
+        }
 
         try {
             $preOrders = $this->wrapInTransaction(function ($request) {
