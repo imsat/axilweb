@@ -18,6 +18,7 @@ export const usePreOrderStore = defineStore('preOrder', {
                 phone: '',
                 delivery_address: '',
                 products: [],
+                g_recaptcha_response: ''
             },
             cart: {
                 product: null,

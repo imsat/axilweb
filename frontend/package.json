@@ -16,6 +16,7 @@
     "sweetalert2": "^11.14.1",
     "vue": "^3.4.37",
     "vue-router": "^4.4.5",
+    "vue3-recaptcha-v2": "^2.0.2",
     "vuetify": "^3.7.2"
   },
   "devDependencies": {

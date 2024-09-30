@@ -1,13 +1,12 @@
 <script setup>
-import {computed, onBeforeMount, reactive, ref, watch} from "vue";
+import {computed, onBeforeMount, ref} from "vue";
 import {storeToRefs} from "pinia";
-// import {useAuthStore} from "../stores/auth.js";
 import {useProductStore} from "../stores/product.js";
 import {usePreOrderStore} from "../stores/preOrders.js";
+import {RecaptchaV2} from "vue3-recaptcha-v2";
 
 const store = usePreOrderStore()
 const productStore = useProductStore()
-// const useAuthStore = useAuthStore()
 const {preOrderForm, cart, showPhoneField} = storeToRefs(store)
 const {products} = storeToRefs(productStore)
 
@@ -33,6 +32,20 @@ const totalCartValue = computed(() => {
 
     return total;
 });
+
+const handleWidgetId = (widgetId) => {
+    // console.log("Widget ID: ", widgetId);
+};
+const handleErrorCalback = () => {
+    // console.log("Error callback");
+};
+const handleExpiredCallback = () => {
+    // console.log("Expired callback");
+};
+const handleLoadCallback = (response) => {
+    preOrderForm.g_recaptcha_response = response
+    store.clearError('g_recaptcha_response')
+};
 
 </script>
 
@@ -136,13 +149,19 @@ const totalCartValue = computed(() => {
                                 required
                             ></v-textarea>
 
-                            <div class="g-recaptcha" data-sitekey="6LcBr1MqAAAAAFQKtIUobH---MBcC76fIjL4aEpF"></div>
+                            <RecaptchaV2
+                                @widget-id="handleWidgetId"
+                                @error-callback="handleErrorCalback"
+                                @expired-callback="handleExpiredCallback"
+                                @load-callback="handleLoadCallback"
+                            />
+                            <v-alert class="mt-2" v-if="store.getError('g_recaptcha_response')" :text="store.getError('g_recaptcha_response')" type="error"></v-alert>
 
                         </v-form>
                     </v-card-text>
 
                     <template v-slot:actions>
-<!--                        :disabled="!valid"-->
+                        <!--                        :disabled="!valid"-->
                         <v-btn
                             prepend-icon="mdi-plus"
                             color="primary"
