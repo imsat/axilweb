@@ -7,6 +7,7 @@ use App\Models\PreOrder;
 use App\Traits\WrapInTransaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 
 class PreOrderController extends Controller
@@ -54,6 +55,19 @@ class PreOrderController extends Controller
 
         if ($validator->fails()) {
             return $this->response(false, 'Invalid data!', 400, null, $validator->errors());
+        }
+
+        //Grecaptcha
+        $recaptchaResponse = $request->get('g_recaptcha_response');
+        if(!blank($recaptchaResponse)){
+            $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+                'secret' => config('app.recaptcha_secret'),
+                'response' => $recaptchaResponse,
+            ])->json();
+
+            if(data_get($response, 'success') !== true){
+                return $this->response(false, 'Something went wrong', 404);
+            }
         }
 
         try {
