@@ -38,8 +38,8 @@ export const usePreOrderStore = defineStore('preOrder', {
         },
         async getPreOrders(props) {
             this.isLoading = true
-            const fields = 'id,user_id,total,status'
-            const withs = JSON.stringify(['user:id,name,email']);
+            const fields = 'id,customer_id,total,status'
+            const withs = JSON.stringify(['customer:id,name,email']);
             const payload = {
                 short_by: this.shortBy,
                 page: props?.page || 1,

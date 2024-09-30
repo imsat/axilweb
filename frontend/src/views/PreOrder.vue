@@ -14,8 +14,8 @@ const searchTerm = ref('')
 
 const headers = [
     {title: 'Id', key: 'id'},
-    {title: 'User Name', key: 'user.name', sortable: false},
-    {title: 'User Email', key: 'user.email', sortable: false},
+    {title: 'Customer Name', key: 'customer.name', sortable: false},
+    {title: 'Customer Email', key: 'customer.email', sortable: false},
     {title: 'Total', key: 'total'},
     {title: 'Status', key: 'status'},
     {title: 'Action', key: 'action', sortable: false},
