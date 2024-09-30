@@ -8,11 +8,11 @@ use Illuminate\Support\Facades\DB;
 
 class PreOrderService implements PreOrderInterface
 {
-    protected $userService, $sendPreOrderConfirmationEmailService;
+    protected $customerService, $sendPreOrderConfirmationEmailService;
 
     public function __construct()
     {
-        $this->userService = new UserService();
+        $this->customerService = new CustomerService();
         $this->sendPreOrderConfirmationEmailService = new SendPreOrderConfirmationEmailService();
     }
 
@@ -36,15 +36,15 @@ class PreOrderService implements PreOrderInterface
     public function create($request)
     {
         // Get user
-        $userData = $request->only('name', 'email', 'phone', 'address');
-        $user = $this->userService->findOrCreate($userData);
+        $customerData = $request->only('name', 'email', 'phone', 'address');
+        $customer = $this->customerService->findOrCreate($customerData);
 
-        if (!blank($user)) {
+        if (!blank($customer)) {
             // Create new pre-order
             $products = $request->get('products');
 
             $preOrder = new PreOrder();
-            $preOrderData['user_id'] = $user->id;
+            $preOrderData['customer_id'] = $customer->id;
             $preOrderData['total'] = $request->get('total');
             $preOrderData['delivery_address'] = $request->get('delivery_address');
             $preOrder->fill($preOrderData);
@@ -76,7 +76,7 @@ class PreOrderService implements PreOrderInterface
                     $preOrder->save();
 
                     //Send emails
-                    $this->sendPreOrderConfirmationEmailService->sendPreOrderConfirmationEmails($preOrder, $user);
+                    $this->sendPreOrderConfirmationEmailService->sendPreOrderConfirmationEmails($preOrder, $customer);
 
                     return $preOrder;
                 }

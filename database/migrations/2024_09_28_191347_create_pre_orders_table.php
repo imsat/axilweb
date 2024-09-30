@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('pre_orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->index()->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('customer_id')->index()->nullable()->constrained('customers')->nullOnDelete();
             $table->decimal('total', 10, 2)->nullable();
             $table->enum('status', ['pending', 'confirmed', 'fulfilled', 'canceled'])->default('pending');
             $table->text('delivery_address')->nullable();
@@ -23,7 +23,6 @@ return new class extends Migration
             $table->timestamps();
         });
     }
-//    protected $fillable = ['user_id', 'order_id', 'status', 'total', 'delivery_date'];
     /**
      * Reverse the migrations.
      */

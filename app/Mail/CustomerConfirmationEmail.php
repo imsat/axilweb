@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class UserConfirmationEmail extends Mailable implements ShouldQueue
+class CustomerConfirmationEmail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -40,7 +40,7 @@ class UserConfirmationEmail extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            view: 'emails.pre-order-user-confirmation',
+            view: 'emails.pre-order-customer-confirmation',
             with: [
                 'data' => $this->data,
             ],

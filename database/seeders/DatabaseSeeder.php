@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Customer;
 use App\Models\PreOrder;
 use App\Models\PreOrderItem;
 use App\Models\User;
@@ -26,7 +27,8 @@ class DatabaseSeeder extends Seeder
              'email' => 'manager@mail.com',
              'role' => 'manager',
          ]);
-         User::factory(500)->create();
+
+         Customer::factory(100)->create();
 
         // Insert category
         DB::table('categories')->insert([

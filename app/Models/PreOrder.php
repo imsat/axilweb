@@ -10,7 +10,7 @@ class PreOrder extends Model
 {
     use HasFactory, SoftDeletesWithUser;
 
-    protected $fillable = ['user_id', 'total', 'status', 'delivery_address', 'delivery_date', 'deleted_by_id', 'deleted_at'];
+    protected $fillable = ['customer_id', 'total', 'status', 'delivery_address', 'delivery_date', 'deleted_by_id', 'deleted_at'];
 
     public function scopeSearch($query)
     {
@@ -18,8 +18,8 @@ class PreOrder extends Model
             $query->where('name', 'like', '%' . request()->search . '%')->orWhere('email', 'like', '%' . request()->search . '%');
         });
     }
-    public function user(){
-        return $this->belongsTo(User::class);
+    public function customer(){
+        return $this->belongsTo(Customer::class);
     }
 
     public function pre_order_items(){
